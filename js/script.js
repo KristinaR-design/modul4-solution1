@@ -81,31 +81,31 @@ document.addEventListener("DOMContentLoaded", function (event) {
 // *** start ***
 // On first load, show home view
 showLoading("#main-content");
+
 $ajaxUtils.sendGetRequest(
   allCategoriesUrl,
-  buildAndShowHomeHTML, // ***** <---- TODO: STEP 1: Substitute [...] ******
-  true); // Explicitly setting the flag to get JSON from server processed into an object literal
-});
-// *** finish **
+  buildAndShowHomeHTML, // Это коллбек, который будет вызван, когда данные о категориях будут получены
+  true // Устанавливаем флаг, чтобы получить данные в формате JSON
+);
 
+// Строим HTML для домашней страницы на основе массива категорий, полученных от сервера
+function buildAndShowHomeHTML(categories) {
 
-// Builds HTML for the home page based on categories array
-// returned from the server.
-function buildAndShowHomeHTML (categories) {
-
-  // Load home snippet page
+  // Загружаем фрагмент HTML страницы
   $ajaxUtils.sendGetRequest(
     homeHtmlUrl,
     function (homeHtml) {
+    
       var chosenCategoryShortName = chooseRandomCategory(categories);
-      var homeHtmlToInsertIntoMainPage = insertProperty(homeHtml,"randomCategoryShortName"+ " " + chosenCategoryShortName)
 
-      insertHtml("#main-content", homeHtmlToInsertIntoMainPage)
+      var homeHtmlToInsertIntoMainPage = insertProperty(homeHtml, "randomCategoryShortName", "'" + chosenCategoryShortName + "'");
 
+     
+      insertHtml("#main-content", homeHtmlToInsertIntoMainPage);
     },
-    false); // False here because we are getting just regular HTML from the server, so no need to process JSON.
+    false 
+  );
 }
-
 
 // Given array of category objects, returns a random category object.
 function chooseRandomCategory (categories) {
